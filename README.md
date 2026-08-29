@@ -152,6 +152,16 @@
 </tr>
 </table>
 
+<div align="center">
+
+<a href="https://github.com/HimenoZako">
+  <img
+    src="https://vani-stats.vercel.app/api?username=YukiHimeno&theme=dark"
+    width="420"
+    alt="HimenoZako's Top Languages"
+  />
+</a>
+
 </div>
 
 <br>
