@@ -1,0 +1,46 @@
+name: Update language usage
+
+on:
+  push:
+    paths:
+      - "scripts/update_language_stats.py"
+      - ".github/workflows/update-language-stats.yml"
+  schedule:
+    - cron: "17 3 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: language-stats
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Update language chart
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/update_language_stats.py
+
+      - name: Commit updated profile when changed
+        run: |
+          if git diff --quiet -- profile.svg; then
+            echo "Language statistics are unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add profile.svg
+          git commit -m "chore: update monthly language statistics"
+          git push
